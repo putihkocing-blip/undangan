@@ -1,106 +1,136 @@
-
 (function () {
   'use strict';
 
-  document.documentElement.classList.add('js');
-
-  var EVENT_DATE = new Date('2026-12-12T08:00:00+07:00');
-  var EVENT_END  = new Date('2026-12-12T14:00:00+07:00');
-  var STORAGE_KEY = 'undangan-raka-ayu-ucapan';
-
-  var $ = function (id) { return document.getElementById(id); };
-
-  /* ---------- Nama tamu dari URL: ?to=Budi+Santoso ---------- */
-  var params = new URLSearchParams(window.location.search);
-  var guest = (params.get('to') || '').trim();
-  if (guest) {
-    $('guestName').textContent = guest;
-    $('fName').value = guest;
+  function $(id) {
+    return document.getElementById(id);
   }
 
-  /* ---------- Buka undangan ---------- */
-  var bgm = $('bgm');
-  var musicBtn = $('musicBtn');
-
-  $('openBtn').addEventListener('click', function () {
-    $('cover').classList.add('is-open');
-    document.body.classList.remove('is-locked');
-    window.scrollTo(0, 0);
-    musicBtn.hidden = false;
-    playMusic();
-  });
-
-  function playMusic() {
-    var p = bgm.play();
-    if (p && p.then) {
-      p.then(function () { musicBtn.classList.add('playing'); })
-       .catch(function () { musicBtn.classList.remove('playing'); });
-    }
+  // Mengubah tanggal ke format Google Calendar
+  function toCal(date) {
+    return date.toISOString().replace(/[-:]|\.\d{3}/g, '');
   }
 
-  musicBtn.addEventListener('click', function () {
-    if (bgm.paused) {
-      playMusic();
+  var openBtn = $('openBtn');
+  var cover = $('cover');
+
+  if (openBtn && cover) {
+    openBtn.addEventListener('click', function () {
+      cover.classList.add('is-open');
+      document.body.classList.remove('is-locked');
+    });
+  }
+
+  var calBtn = $('calBtn');
+
+  if (calBtn) {
+    var start = new Date('2026-12-12T08:00:00+07:00');
+    var end = new Date('2026-12-12T14:00:00+07:00');
+
+    var calendarUrl =
+      'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+      '&text=' + encodeURIComponent('Pernikahan Raka & Ayu') +
+      '&dates=' + toCal(start) + '/' + toCal(end) +
+      '&location=' + encodeURIComponent(
+        'Gedung Graha Sentosa, Surabaya'
+      );
+
+    calBtn.href = calendarUrl;
+    calBtn.target = '_blank';
+    calBtn.rel = 'noopener noreferrer';
+  }
+
+  function showToast(message) {
+    var toastMsg = $('toastMsg');
+    var appToast = $('appToast');
+
+    if (toastMsg && appToast && window.bootstrap) {
+      toastMsg.textContent = message;
+
+      bootstrap.Toast.getOrCreateInstance(appToast, {
+        delay: 2600
+      }).show();
     } else {
-      bgm.pause();
-      musicBtn.classList.remove('playing');
+      alert(message);
     }
-  });
-
-
-  /* ---------- Tautan Google Calendar ---------- */
-  function toCal(d) { return d.toISOString().replace(/[-:]|\.\d{3}/g, ''); }
-  $('calBtn').href =
-    'https://calendar.google.com/calendar/render?action=TEMPLATE' +
-    '&text=' + encodeURIComponent('Pernikahan Raka & Ayu') +
-    '&dates=' + toCal(EVENT_DATE) + '/' + toCal(EVENT_END) +
-    '&location=' + encodeURIComponent('Gedung Graha Sentosa, Jl. Basuki Rahmat No. 88, Surabaya');
-
-  /* ---------- Toast ---------- */
-  function showToast(msg) {
-    $('toastMsg').textContent = msg;
-    bootstrap.Toast.getOrCreateInstance($('appToast'), { delay: 2600 }).show();
   }
 
-  /* ---------- Salin nomor rekening ---------- */
-  document.querySelectorAll('.copy-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var text = $(btn.dataset.target).textContent.trim();
-      var done = function () { showToast('Nomor rekening disalin: ' + text); };
+  function fallbackCopy(text) {
+    var textarea = document.createElement('textarea');
+
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.left = '-9999px';
+
+    document.body.appendChild(textarea);
+    textarea.select();
+
+    var success = false;
+
+    try {
+      success = document.execCommand('copy');
+    } catch (error) {
+      success = false;
+    }
+
+    document.body.removeChild(textarea);
+
+    if (success) {
+      showToast('Nomor rekening berhasil disalin.');
+    } else {
+      showToast('Silakan salin nomor rekening secara manual: ' + text);
+    }
+  }
+
+  document.querySelectorAll('.copy-btn').forEach(function (button) {
+    button.addEventListener('click', function () {
+      var targetId = button.getAttribute('data-target');
+      var target = $(targetId);
+
+      if (!target) {
+        showToast('Nomor rekening tidak ditemukan.');
+        return;
+      }
+
+      var text = target.textContent.trim();
 
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(done).catch(function () { fallbackCopy(text, done); });
+        navigator.clipboard.writeText(text)
+          .then(function () {
+            showToast('Nomor rekening berhasil disalin.');
+          })
+          .catch(function () {
+            fallbackCopy(text);
+          });
       } else {
-        fallbackCopy(text, done);
+        fallbackCopy(text);
       }
     });
   });
 
-  function fallbackCopy(text, done) {
-    var ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    try { document.execCommand('copy'); done(); } catch (e) { showToast('Salin manual: ' + text); }
-    document.body.removeChild(ta);
+  var revealItems = document.querySelectorAll('.reveal');
+
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.12
+      }
+    );
+
+    revealItems.forEach(function (item) {
+      observer.observe(item);
+    });
+  } else {
+    revealItems.forEach(function (item) {
+      item.classList.add('in');
+    });
   }
 
-  
-  /* ---------- Animasi muncul saat scroll ---------- */
-  var items = document.querySelectorAll('.reveal');
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (en.isIntersecting) {
-          en.target.classList.add('in');
-          io.unobserve(en.target);
-        }
-      });
-    }, { threshold: 0.12 });
-    items.forEach(function (el) { io.observe(el); });
-  } else {
-    items.forEach(function (el) { el.classList.add('in'); });
-  }
 })();
