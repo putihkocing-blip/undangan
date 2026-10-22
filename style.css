@@ -1,19 +1,16 @@
-/* =========================================================
-   Undangan Pernikahan — versi abu-abu (grafit, gaya editorial)
-   Ubah warna & font di blok :root berikut.
-   ========================================================= */
+
 :root {
-  --bg:       #ececea;   /* latar utama */
-  --bg-alt:   #dfe0dd;   /* section selang-seling */
-  --surface:  #f7f7f5;   /* kartu & formulir */
-  --fg:       #1d2023;   /* teks */
-  --mute:     #5d6469;   /* teks sekunder */
-  --line:     #bfc2c0;   /* garis tipis */
-  --dark:     #1d2023;   /* cover & section gelap (selalu gelap) */
+  --bg:       #ececea;  
+  --bg-alt:   #dfe0dd;  
+  --surface:  #f7f7f5;   
+  --fg:       #1d2023;  
+  --mute:     #5d6469;   
+  --line:     #bfc2c0;   
+  --dark:     #1d2023;   
   --on-dark:  #ececea;
   --dark-mute:#9ba2a7;
   --dark-line:#3a4044;
-  --accent:   #3f5560;   /* biru baja redup */
+  --accent:   #3f5560;   
 
   --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
   --font-body:    "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -69,7 +66,6 @@ h1, h2, h3 {
 }
 .label { color: var(--accent); margin-bottom: 1rem; }
 
-/* ---------- Tombol ---------- */
 .btn {
   font-family: var(--font-mono);
   font-size: .78rem;
@@ -91,7 +87,6 @@ a:focus-visible, button:focus-visible, .form-control:focus, .form-select:focus {
   box-shadow: none;
 }
 
-/* ---------- Cover ---------- */
 .cover {
   position: fixed;
   inset: 0;
@@ -155,23 +150,6 @@ a:focus-visible, button:focus-visible, .form-control:focus, .form-select:focus {
   overflow-wrap: anywhere;
 }
 
-/* ---------- Musik ---------- */
-.music-btn {
-  position: fixed;
-  right: max(1rem, env(safe-area-inset-right, 0px));
-  bottom: max(1rem, env(safe-area-inset-bottom, 0px));
-  z-index: 900;
-  width: 46px;
-  height: 46px;
-  border: 1px solid var(--fg);
-  background: var(--bg);
-  color: var(--fg);
-  font-size: 1.1rem;
-  line-height: 1;
-}
-.music-btn.playing { background: var(--fg); color: var(--bg); }
-
-/* ---------- Hero ---------- */
 .hero { padding-bottom: 4rem; border-bottom: 1px solid var(--line); }
 .topnav {
   display: flex;
@@ -203,30 +181,6 @@ a:focus-visible, button:focus-visible, .form-control:focus, .form-select:focus {
   line-height: 1;
 }
 .hero-copy { max-width: 32rem; margin: 3.5rem 0 0; color: var(--mute); font-size: 1.1rem; }
-
-/* ---------- Hitung mundur ---------- */
-.strip { background: var(--bg-alt); border-bottom: 1px solid var(--line); }
-.cd-cell {
-  display: flex;
-  flex-direction: column;
-  padding: 1.6rem 1rem 1.4rem;
-  border-left: 1px solid var(--line);
-}
-.cd-cell:first-child { border-left: 0; }
-.cd-cell span {
-  font-family: var(--font-display);
-  font-size: clamp(2.8rem, 9vw, 5rem);
-  font-weight: 800;
-  letter-spacing: -.04em;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-.cd-cell small { color: var(--mute); margin-top: .4rem; }
-.strip-done { margin: 0; padding: 1.6rem 0; font-family: var(--font-display); font-size: 1.4rem; font-weight: 600; }
-@media (max-width: 767.98px) {
-  .cd-cell:nth-child(3) { border-left: 0; }
-  .cd-cell:nth-child(n+3) { border-top: 1px solid var(--line); }
-}
 
 .section { padding-block: 5.5rem; }
 .section-alt { background: var(--bg-alt); }
@@ -328,45 +282,6 @@ a:focus-visible, button:focus-visible, .form-control:focus, .form-select:focus {
   .bank-no { grid-column: 1 / -1; grid-row: 2; }
 }
 
-.rsvp-form { background: var(--surface); border: 1px solid var(--line); padding: 2rem 1.6rem; }
-.form-label { color: var(--mute); margin-bottom: .4rem; }
-.form-control, .form-select {
-  border-radius: 0;
-  border: 1px solid var(--line);
-  background-color: var(--bg);
-  color: var(--fg);
-  font-family: var(--font-body);
-}
-.form-control::placeholder { color: var(--mute); opacity: .8; }
-
-.wish-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: .5rem;
-  margin-bottom: 1.25rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--fg);
-}
-.wish-head h3 { font-size: 1.9rem; margin: 0; }
-.wish-head .mono { color: var(--mute); }
-.wish-list { max-height: 30rem; overflow-y: auto; display: grid; gap: 0; }
-.wish { padding: 1.1rem 0; border-bottom: 1px solid var(--line); min-width: 0; }
-.wish header { display: flex; flex-wrap: wrap; gap: .3rem .8rem; align-items: baseline; margin-bottom: .3rem; }
-.wish strong { font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; letter-spacing: -.01em; }
-.badge-status {
-  font-family: var(--font-mono);
-  font-size: .66rem;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  padding: .05rem .5rem;
-  border: 1px solid var(--accent);
-  color: var(--accent);
-}
-.wish p { margin: 0; color: var(--mute); overflow-wrap: anywhere; }
-.wish-empty { color: var(--mute); }
-.note { font-size: .8rem; color: var(--mute); margin: 1rem 0 0; }
 
 .closing { padding-block: 5rem 4rem; border-top: 1px solid var(--line); }
 .closing-copy { max-width: 32rem; color: var(--mute); font-size: 1.1rem; margin-bottom: 2.5rem; }
