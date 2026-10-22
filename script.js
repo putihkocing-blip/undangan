@@ -1,24 +1,6 @@
-
 (function () {
   'use strict';
 
-  document.documentElement.classList.add('js');
-
-  var EVENT_DATE = new Date('2026-12-12T08:00:00+07:00');
-  var EVENT_END  = new Date('2026-12-12T14:00:00+07:00');
-  var STORAGE_KEY = 'undangan-raka-ayu-ucapan';
-
-  var $ = function (id) { return document.getElementById(id); };
-
-  /* ---------- Nama tamu dari URL: ?to=Budi+Santoso ---------- */
-  var params = new URLSearchParams(window.location.search);
-  var guest = (params.get('to') || '').trim();
-  if (guest) {
-    $('guestName').textContent = guest;
-    $('fName').value = guest;
-  }
-
-  /* ---------- Buka undangan ---------- */
   var bgm = $('bgm');
   var musicBtn = $('musicBtn');
 
@@ -47,8 +29,6 @@
     }
   });
 
-
-  /* ---------- Tautan Google Calendar ---------- */
   function toCal(d) { return d.toISOString().replace(/[-:]|\.\d{3}/g, ''); }
   $('calBtn').href =
     'https://calendar.google.com/calendar/render?action=TEMPLATE' +
@@ -56,13 +36,11 @@
     '&dates=' + toCal(EVENT_DATE) + '/' + toCal(EVENT_END) +
     '&location=' + encodeURIComponent('Gedung Graha Sentosa, Jl. Basuki Rahmat No. 88, Surabaya');
 
-  /* ---------- Toast ---------- */
-  function showToast(msg) {
+    function showToast(msg) {
     $('toastMsg').textContent = msg;
     bootstrap.Toast.getOrCreateInstance($('appToast'), { delay: 2600 }).show();
   }
 
-  /* ---------- Salin nomor rekening ---------- */
   document.querySelectorAll('.copy-btn').forEach(function (btn) {
     btn.addEventListener('click', function () {
       var text = $(btn.dataset.target).textContent.trim();
@@ -87,8 +65,6 @@
     document.body.removeChild(ta);
   }
 
-  
-  /* ---------- Animasi muncul saat scroll ---------- */
   var items = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
