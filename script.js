@@ -4,8 +4,6 @@
   function $(id) {
     return document.getElementById(id);
   }
-
-  // Mengubah tanggal ke format Google Calendar
   function toCal(date) {
     return date.toISOString().replace(/[-:]|\.\d{3}/g, '');
   }
@@ -21,7 +19,6 @@
   }
 
   var calBtn = $('calBtn');
-
   if (calBtn) {
     var start = new Date('2026-12-12T08:00:00+07:00');
     var end = new Date('2026-12-12T14:00:00+07:00');
@@ -51,8 +48,7 @@
       }).show();
     } else {
       alert(message);
-    }
-  }
+    }}
 
   function fallbackCopy(text) {
     var textarea = document.createElement('textarea');
@@ -78,8 +74,7 @@
       showToast('Nomor rekening berhasil disalin.');
     } else {
       showToast('Silakan salin nomor rekening secara manual: ' + text);
-    }
-  }
+    }}
 
   document.querySelectorAll('.copy-btn').forEach(function (button) {
     button.addEventListener('click', function () {
@@ -123,7 +118,6 @@
         threshold: 0.12
       }
     );
-
     revealItems.forEach(function (item) {
       observer.observe(item);
     });
@@ -132,5 +126,4 @@
       item.classList.add('in');
     });
   }
-
 })();
